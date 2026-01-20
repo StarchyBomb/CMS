@@ -620,12 +620,12 @@
                 return;
             }
 
-            list.innerHTML = uploadedFiles.map(file => `
-                <div class="file-item">
-                    <span class="file-name">${file.name}</span>
-                    <span class="file-status">✅ พร้อม</span>
-                </div>
-            `).join('');
+            list.innerHTML = uploadedFiles.map(file => {
+                return '<div class="file-item">' +
+                    '<span class="file-name">' + escapeHtml(file.name) + '</span>' +
+                    '<span class="file-status">✅ พร้อม</span>' +
+                    '</div>';
+            }).join('');
         }
 
         function completeSetup() {
@@ -637,7 +637,7 @@
             );
 
             if (missingFiles.length > 0) {
-                alert(`⚠️ ยังไม่ได้อัปโหลดไฟล์: ${missingFiles.join(', ')}\n\n(คุณสามารถข้ามขั้นตอนนี้ได้และอัปโหลดทีหลัง)`);
+                alert('⚠️ ยังไม่ได้อัปโหลดไฟล์: ' + missingFiles.join(', ') + '\n\n(คุณสามารถข้ามขั้นตอนนี้ได้และอัปโหลดทีหลัง)');
             }
 
             goToStep(3);
@@ -660,6 +660,12 @@
         function showMessage(message, type) {
             // Simple message display
             alert(message);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
         }
 
         // Setup event listeners
