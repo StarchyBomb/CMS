@@ -216,13 +216,16 @@
             
             <div class="url-input-section">
                 <input type="url" id="website-url" class="url-input" 
-                       placeholder="https://example.com" value="http://localhost:5173">
+                       placeholder="https://example.com หรือ http://localhost:3000" value="">
                 <button class="btn btn-primary" id="scrape-btn" onclick="scrapeWebsite()">
                     🔍 ดึงข้อมูล
                 </button>
                 <button class="btn btn-primary" id="install-btn" onclick="installPlugin()" disabled>
                     ⚡ ติดตั้ง Plugin
                 </button>
+            </div>
+            <div style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.9;">
+                <p>💡 <strong>วิธีใช้:</strong> กรอก URL ของเว็บไซต์ → คลิก "ดึงข้อมูล" → ตรวจสอบข้อมูล → คลิก "ติดตั้ง Plugin"</p>
             </div>
         </div>
 
@@ -418,28 +421,33 @@
 
         function generatePluginCode(data) {
             // Generate CMS widget code with extracted data
+            const websiteUrl = new URL(websiteUrl).origin;
+            const adminUrl = websiteUrl + '/cms-admin.html';
+            
             let code = '<!-- TorYod CMS Plugin -->\n';
-            code += '<script src="cms-widget.js"></script>\n';
+            code += '<!-- ดึงข้อมูลจาก: ' + websiteUrl + ' -->\n';
+            code += '<script src="/cms-widget.js"></script>\n';
             code += '<script>\n';
             code += '  TorYodCMS.init({\n';
-            code += '    adminUrl: \'cms-admin.html\',\n';
+            code += '    adminUrl: \'' + adminUrl + '\',\n';
             code += '    storageKey: \'toryod-cms-config\',\n';
             code += '    extractedData: ' + JSON.stringify(data, null, 2) + '\n';
             code += '  });\n';
-            code += '</script>';
+            code += '</script>\n';
+            code += '<!-- หมายเหตุ: ต้องอัปโหลดไฟล์ cms-widget.js และ cms-admin.html ไปยังเว็บไซต์ด้วย -->';
             return code;
         }
 
         function showMessage(message, type) {
             const statusDiv = document.getElementById('status-message');
             statusDiv.className = 'status-message ' + type;
-            statusDiv.textContent = message;
+            statusDiv.innerHTML = message.replace(/\n/g, '<br>');
             statusDiv.style.display = 'block';
 
             if (type === 'success' || type === 'error') {
                 setTimeout(() => {
                     statusDiv.style.display = 'none';
-                }, 5000);
+                }, 8000);
             }
         }
 
