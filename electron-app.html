@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TorYod CMS - Desktop App</title>
+    <link rel="stylesheet" href="cms-admin.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            overflow: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .top-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+        }
+
+        .top-section h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .url-input-section {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .url-input {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: white;
+            color: #667eea;
+        }
+
+        .btn-primary:hover {
+            background: #f0f0f0;
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 300px;
+            background: white;
+            border-right: 1px solid #e0e0e0;
+            overflow-y: auto;
+            padding: 1.5rem;
+        }
+
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+
+        .data-section {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .data-section h3 {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .data-item {
+            padding: 0.75rem;
+            background: #f9f9f9;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            border-left: 3px solid #667eea;
+        }
+
+        .data-item strong {
+            color: #667eea;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .color-preview {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            margin-right: 0.5rem;
+            vertical-align: middle;
+            border: 1px solid #ddd;
+        }
+
+        .image-preview {
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: 6px;
+            margin-top: 0.5rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .status-message {
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+        }
+
+        .status-message.success {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .status-message.error {
+            background: #ffebee;
+            color: #c62828;
+            border-left: 4px solid #F44336;
+        }
+
+        .status-message.info {
+            background: #e3f2fd;
+            color: #1565c0;
+            border-left: 4px solid #2196F3;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-success {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="top-section">
+            <h1>🎨 TorYod CMS Desktop App</h1>
+            <p>ดึงข้อมูลจากเว็บไซต์และติดตั้ง Plugin อัตโนมัติ</p>
+            
+            <div class="url-input-section">
+                <input type="url" id="website-url" class="url-input" 
+                       placeholder="https://example.com" value="http://localhost:5173">
+                <button class="btn btn-primary" id="scrape-btn" onclick="scrapeWebsite()">
+                    🔍 ดึงข้อมูล
+                </button>
+                <button class="btn btn-primary" id="install-btn" onclick="installPlugin()" disabled>
+                    ⚡ ติดตั้ง Plugin
+                </button>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <h3>📋 ข้อมูลที่ดึงได้</h3>
+                <div id="stats">
+                    <p>ยังไม่ได้ดึงข้อมูล</p>
+                </div>
+            </div>
+
+            <div class="content-area" id="content-area">
+                <div class="loading" id="loading" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>กำลังดึงข้อมูลจากเว็บไซต์...</p>
+                </div>
+
+                <div id="status-message"></div>
+
+                <div id="data-sections"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let scrapedData = null;
+        let websiteUrl = '';
+
+        async function scrapeWebsite() {
+            const url = document.getElementById('website-url').value;
+            if (!url) {
+                showMessage('กรุณากรอก URL', 'error');
+                return;
+            }
+
+            websiteUrl = url;
+            const loading = document.getElementById('loading');
+            const contentArea = document.getElementById('content-area');
+            const scrapeBtn = document.getElementById('scrape-btn');
+            const installBtn = document.getElementById('install-btn');
+
+            loading.style.display = 'block';
+            scrapeBtn.disabled = true;
+            installBtn.disabled = true;
+            document.getElementById('data-sections').innerHTML = '';
+
+            try {
+                const result = await window.electronAPI.scrapeWebsite(url);
+                
+                if (result.success) {
+                    scrapedData = result.data;
+                    displayData(result.data);
+                    updateStats(result.data);
+                    installBtn.disabled = false;
+                    showMessage('✅ ดึงข้อมูลสำเร็จ!', 'success');
+                } else {
+                    showMessage('❌ ดึงข้อมูลล้มเหลว: ' + result.error, 'error');
+                }
+            } catch (error) {
+                showMessage('❌ เกิดข้อผิดพลาด: ' + error.message, 'error');
+            } finally {
+                loading.style.display = 'none';
+                scrapeBtn.disabled = false;
+            }
+        }
+
+        function displayData(data) {
+            const sections = document.getElementById('data-sections');
+            sections.innerHTML = '';
+
+            // Texts Section
+            if (data.texts && data.texts.length > 0) {
+                const textsSection = createSection('📝 ข้อความ (' + data.texts.length + ')', 'texts');
+                data.texts.slice(0, 50).forEach(item => {
+                    textsSection.appendChild(createDataItem(item.selector, item.text));
+                });
+                sections.appendChild(textsSection);
+            }
+
+            // Colors Section
+            if (data.colors && data.colors.length > 0) {
+                const colorsSection = createSection('🎨 สี (' + data.colors.length + ')', 'colors');
+                const uniqueColors = [...new Set(data.colors.flatMap(c => 
+                    Array.isArray(c.colors) ? c.colors : [c.value || c]
+                ))].filter(c => c);
+                
+                uniqueColors.slice(0, 30).forEach(color => {
+                    const item = document.createElement('div');
+                    item.className = 'data-item';
+                    item.innerHTML = `
+                        <span class="color-preview" style="background-color: ${color}"></span>
+                        <strong>${color}</strong>
+                    `;
+                    colorsSection.appendChild(item);
+                });
+                sections.appendChild(colorsSection);
+            }
+
+            // Images Section
+            if (data.images && data.images.length > 0) {
+                const imagesSection = createSection('🖼️ รูปภาพ (' + data.images.length + ')', 'images');
+                data.images.slice(0, 20).forEach(item => {
+                    const imgItem = document.createElement('div');
+                    imgItem.className = 'data-item';
+                    imgItem.innerHTML = `
+                        <strong>${item.selector || 'Image'}</strong>
+                        <p>${item.src}</p>
+                        <img src="${item.src}" alt="${item.alt}" class="image-preview" onerror="this.style.display='none'">
+                    `;
+                    imagesSection.appendChild(imgItem);
+                });
+                sections.appendChild(imagesSection);
+            }
+
+            // Styles Section
+            if (data.styles && data.styles.length > 0) {
+                const stylesSection = createSection('💅 CSS Styles (' + data.styles.length + ')', 'styles');
+                data.styles.forEach((style, index) => {
+                    const styleItem = document.createElement('div');
+                    styleItem.className = 'data-item';
+                    styleItem.innerHTML = `
+                        <strong>Style ${index + 1}</strong>
+                        <pre style="background: #f5f5f5; padding: 0.5rem; border-radius: 4px; overflow-x: auto; font-size: 0.85rem; margin-top: 0.5rem;">${escapeHtml(style.substring(0, 500))}${style.length > 500 ? '...' : ''}</pre>
+                    `;
+                    stylesSection.appendChild(styleItem);
+                });
+                sections.appendChild(stylesSection);
+            }
+        }
+
+        function createSection(title, id) {
+            const section = document.createElement('div');
+            section.className = 'data-section';
+            section.id = id;
+            const h3 = document.createElement('h3');
+            h3.textContent = title;
+            section.appendChild(h3);
+            return section;
+        }
+
+        function createDataItem(selector, content) {
+            const item = document.createElement('div');
+            item.className = 'data-item';
+            item.innerHTML = `
+                <strong>${escapeHtml(selector)}</strong>
+                <p>${escapeHtml(content)}</p>
+            `;
+            return item;
+        }
+
+        function updateStats(data) {
+            const stats = document.getElementById('stats');
+            stats.innerHTML = `
+                <p><strong>ข้อความ:</strong> ${data.texts?.length || 0}</p>
+                <p><strong>สี:</strong> ${data.colors?.length || 0}</p>
+                <p><strong>รูปภาพ:</strong> ${data.images?.length || 0}</p>
+                <p><strong>CSS:</strong> ${data.styles?.length || 0}</p>
+            `;
+        }
+
+        async function installPlugin() {
+            if (!scrapedData || !websiteUrl) {
+                showMessage('กรุณาดึงข้อมูลก่อน', 'error');
+                return;
+            }
+
+            const installBtn = document.getElementById('install-btn');
+            installBtn.disabled = true;
+
+            // Generate plugin code
+            const pluginCode = generatePluginCode(scrapedData);
+
+            try {
+                const result = await window.electronAPI.installPlugin(websiteUrl, pluginCode);
+                
+                if (result.success) {
+                    showMessage('✅ ติดตั้ง Plugin สำเร็จ!', 'success');
+                    
+                    // Save data
+                    const saveResult = await window.electronAPI.saveData(scrapedData);
+                    if (saveResult.success) {
+                        showMessage('✅ บันทึกข้อมูลที่: ' + saveResult.path, 'success');
+                    }
+                } else {
+                    showMessage('❌ ติดตั้ง Plugin ล้มเหลว: ' + result.error, 'error');
+                }
+            } catch (error) {
+                showMessage('❌ เกิดข้อผิดพลาด: ' + error.message, 'error');
+            } finally {
+                installBtn.disabled = false;
+            }
+        }
+
+        function generatePluginCode(data) {
+            // Generate CMS widget code with extracted data
+            let code = '<!-- TorYod CMS Plugin -->\n';
+            code += '<script src="cms-widget.js"></script>\n';
+            code += '<script>\n';
+            code += '  TorYodCMS.init({\n';
+            code += '    adminUrl: \'cms-admin.html\',\n';
+            code += '    storageKey: \'toryod-cms-config\',\n';
+            code += '    extractedData: ' + JSON.stringify(data, null, 2) + '\n';
+            code += '  });\n';
+            code += '</script>';
+            return code;
+        }
+
+        function showMessage(message, type) {
+            const statusDiv = document.getElementById('status-message');
+            statusDiv.className = 'status-message ' + type;
+            statusDiv.textContent = message;
+            statusDiv.style.display = 'block';
+
+            if (type === 'success' || type === 'error') {
+                setTimeout(() => {
+                    statusDiv.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>

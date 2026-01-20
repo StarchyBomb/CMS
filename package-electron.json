@@ -2,11 +2,11 @@
   "name": "toryod-cms-app",
   "version": "1.0.0",
   "description": "TorYod CMS - Standalone Desktop Application",
-  "main": "main.js",
+  "main": "electron-main.js",
   "scripts": {
     "start": "electron .",
     "build": "electron-builder",
-    "build:win": "electron-builder --win",
+    "build:win": "electron-builder --win --x64",
     "build:mac": "electron-builder --mac",
     "build:linux": "electron-builder --linux"
   },
@@ -18,6 +18,9 @@
   ],
   "author": "TorYod Development Team",
   "license": "MIT",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.12"
+  },
   "devDependencies": {
     "electron": "^27.0.0",
     "electron-builder": "^24.6.4"
@@ -29,15 +32,14 @@
       "output": "dist"
     },
     "files": [
-      "cms-app.html",
+      "electron-app.html",
+      "electron-main.js",
+      "electron-preload.js",
       "cms-admin.html",
       "cms-admin.js",
       "cms-admin.css",
       "cms-widget.js",
-      "main.js",
-      "preload.js",
-      "manifest.json",
-      "sw.js"
+      "node_modules/**/*"
     ],
     "win": {
       "target": ["nsis"],
