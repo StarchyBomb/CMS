@@ -273,19 +273,23 @@
             document.getElementById('data-sections').innerHTML = '';
 
             try {
+                console.log('🔍 Starting scrape for:', url);
                 const result = await window.electronAPI.scrapeWebsite(url);
+                console.log('📦 Scrape result:', result);
                 
                 if (result.success) {
                     scrapedData = result.data;
                     displayData(result.data);
                     updateStats(result.data);
                     installBtn.disabled = false;
-                    showMessage('✅ ดึงข้อมูลสำเร็จ!', 'success');
+                    showMessage('✅ ดึงข้อมูลสำเร็จ! พบข้อความ ' + (result.data.texts?.length || 0) + ' รายการ, สี ' + (result.data.colors?.length || 0) + ' รายการ, รูปภาพ ' + (result.data.images?.length || 0) + ' รายการ', 'success');
                 } else {
-                    showMessage('❌ ดึงข้อมูลล้มเหลว: ' + result.error, 'error');
+                    console.error('❌ Scrape failed:', result.error);
+                    showMessage('❌ ดึงข้อมูลล้มเหลว: ' + (result.error || 'Unknown error') + '\n\n💡 ตรวจสอบ:\n- URL ถูกต้องหรือไม่\n- เว็บไซต์สามารถเข้าถึงได้หรือไม่\n- เปิด Console (F12) เพื่อดูรายละเอียด', 'error');
                 }
             } catch (error) {
-                showMessage('❌ เกิดข้อผิดพลาด: ' + error.message, 'error');
+                console.error('❌ Exception:', error);
+                showMessage('❌ เกิดข้อผิดพลาด: ' + error.message + '\n\n💡 เปิด Console (F12) เพื่อดูรายละเอียด', 'error');
             } finally {
                 loading.style.display = 'none';
                 scrapeBtn.disabled = false;

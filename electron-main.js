@@ -6,6 +6,16 @@ const https = require('https');
 const http = require('http');
 const { URL } = require('url');
 
+// Load cheerio at top level
+let cheerio;
+try {
+  cheerio = require('cheerio');
+  console.log('✅ Cheerio loaded successfully');
+} catch (error) {
+  console.error('❌ Failed to load cheerio:', error);
+  // Fallback: use basic HTML parsing
+}
+
 let mainWindow;
 
 function createWindow() {
@@ -33,10 +43,13 @@ function createWindow() {
     mainWindow.show();
   });
 
-  // Open DevTools in development
-  if (process.env.NODE_ENV === 'development') {
-    mainWindow.webContents.openDevTools();
-  }
+  // Open DevTools for debugging (always open for now)
+  mainWindow.webContents.openDevTools();
+  
+  // Log errors
+  mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription) => {
+    console.error('❌ Failed to load:', errorCode, errorDescription);
+  });
 
   mainWindow.on('closed', () => {
     mainWindow = null;
@@ -63,11 +76,30 @@ app.on('window-all-closed', () => {
 
 // Scrape website data
 ipcMain.handle('scrape-website', async (event, url) => {
+  console.log('🔍 Scraping website:', url);
   try {
-    const data = await scrapeWebsite(url);
+    if (!url || url.trim() === '') {
+      throw new Error('URL is required');
+    }
+
+    // Validate and fix URL
+    let validUrl = url.trim();
+    if (!validUrl.startsWith('http://') && !validUrl.startsWith('https://')) {
+      validUrl = 'http://' + validUrl;
+    }
+
+    console.log('📥 Fetching:', validUrl);
+    const data = await scrapeWebsite(validUrl);
+    console.log('✅ Scraping successful, found:', {
+      texts: data.texts?.length || 0,
+      colors: data.colors?.length || 0,
+      images: data.images?.length || 0,
+      styles: data.styles?.length || 0
+    });
     return { success: true, data };
   } catch (error) {
-    return { success: false, error: error.message };
+    console.error('❌ Scraping error:', error);
+    return { success: false, error: error.message || 'Unknown error occurred' };
   }
 });
 
@@ -131,34 +163,78 @@ async function scrapeWebsite(url) {
       const parsedUrl = new URL(url);
       const client = parsedUrl.protocol === 'https:' ? https : http;
 
-      client.get(url, (res) => {
+      const options = {
+        timeout: 10000, // 10 seconds timeout
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        }
+      };
+
+      const req = client.get(url, options, (res) => {
+        console.log('📡 Response status:', res.statusCode);
+        
+        if (res.statusCode !== 200) {
+          reject(new Error(`HTTP ${res.statusCode}: ${res.statusMessage}`));
+          return;
+        }
+
         let html = '';
+        const maxSize = 10 * 1024 * 1024; // 10MB limit
+        let totalSize = 0;
         
         res.on('data', (chunk) => {
-          html += chunk;
+          totalSize += chunk.length;
+          if (totalSize > maxSize) {
+            req.destroy();
+            reject(new Error('Response too large'));
+            return;
+          }
+          html += chunk.toString('utf8');
         });
 
         res.on('end', () => {
           try {
+            console.log('📄 HTML received, length:', html.length);
+            if (html.length === 0) {
+              reject(new Error('Empty response from server'));
+              return;
+            }
             const data = extractWebsiteData(html, url);
             resolve(data);
           } catch (error) {
+            console.error('❌ Error extracting data:', error);
             reject(error);
           }
         });
-      }).on('error', (error) => {
-        reject(error);
       });
+
+      req.on('error', (error) => {
+        console.error('❌ Request error:', error);
+        reject(new Error(`Failed to connect: ${error.message}`));
+      });
+
+      req.on('timeout', () => {
+        req.destroy();
+        reject(new Error('Request timeout'));
+      });
+
+      req.setTimeout(10000);
     } catch (error) {
-      reject(error);
+      console.error('❌ URL parsing error:', error);
+      reject(new Error(`Invalid URL: ${error.message}`));
     }
   });
 }
 
 // Extract data from HTML
 function extractWebsiteData(html, baseUrl) {
-  const cheerio = require('cheerio');
-  const $ = cheerio.load(html);
+  if (!cheerio) {
+    // Fallback: basic extraction without cheerio
+    return extractWebsiteDataBasic(html, baseUrl);
+  }
+
+  try {
+    const $ = cheerio.load(html);
 
   const data = {
     texts: [],
@@ -241,6 +317,74 @@ function extractWebsiteData(html, baseUrl) {
       };
     }
   });
+
+    return data;
+  } catch (error) {
+    console.error('❌ Cheerio error, using fallback:', error);
+    return extractWebsiteDataBasic(html, baseUrl);
+  }
+}
+
+// Basic extraction without cheerio (fallback)
+function extractWebsiteDataBasic(html, baseUrl) {
+  console.log('⚠️ Using basic extraction (cheerio not available)');
+  const data = {
+    texts: [],
+    colors: [],
+    images: [],
+    styles: [],
+    html: {}
+  };
+
+  // Extract texts using regex
+  const textRegex = /<(h[1-6]|p|span|a|button|label)[^>]*>([^<]+)<\/\1>/gi;
+  let match;
+  while ((match = textRegex.exec(html)) !== null) {
+    const text = match[2].trim();
+    if (text && text.length > 0) {
+      data.texts.push({
+        selector: match[1],
+        text: text,
+        tag: match[1]
+      });
+    }
+  }
+
+  // Extract colors from style attributes
+  const styleRegex = /style=["']([^"']+)["']/gi;
+  while ((match = styleRegex.exec(html)) !== null) {
+    const colors = extractColorsFromStyle(match[1]);
+    if (colors.length > 0) {
+      data.colors.push({ colors: colors });
+    }
+  }
+
+  // Extract images
+  const imgRegex = /<img[^>]+src=["']([^"']+)["']/gi;
+  while ((match = imgRegex.exec(html)) !== null) {
+    try {
+      const fullUrl = new URL(match[1], baseUrl).href;
+      data.images.push({
+        selector: 'img',
+        src: fullUrl,
+        alt: ''
+      });
+    } catch (e) {
+      data.images.push({
+        selector: 'img',
+        src: match[1],
+        alt: ''
+      });
+    }
+  }
+
+  // Extract CSS from style tags
+  const styleTagRegex = /<style[^>]*>([\s\S]*?)<\/style>/gi;
+  while ((match = styleTagRegex.exec(html)) !== null) {
+    data.styles.push(match[1]);
+    const colors = extractColorsFromCSS(match[1]);
+    data.colors.push(...colors);
+  }
 
   return data;
 }
