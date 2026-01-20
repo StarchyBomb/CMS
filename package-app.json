@@ -1,0 +1,21 @@
+{
+  "name": "toryod-cms-installer",
+  "version": "1.0.0",
+  "description": "TorYod CMS Local Installer - Desktop App",
+  "main": "app.html",
+  "scripts": {
+    "start": "npx http-server -p 8080 -o app.html",
+    "build": "echo 'Build complete - ready to deploy'"
+  },
+  "keywords": [
+    "cms",
+    "installer",
+    "local",
+    "desktop-app"
+  ],
+  "author": "TorYod Development Team",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}

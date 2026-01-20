@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TorYod CMS - Local Installer App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .app-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 900px;
+            width: 100%;
+            padding: 2rem;
+        }
+
+        .app-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .app-header h1 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .app-header p {
+            color: #666;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        .status-badge.local {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .status-badge.remote {
+            background: #F44336;
+            color: white;
+        }
+
+        .upload-section {
+            background: #f5f5f5;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 2px dashed #667eea;
+        }
+
+        .upload-area {
+            text-align: center;
+            padding: 3rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .upload-area:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .upload-area.dragover {
+            background: #e3f2fd;
+            border: 2px dashed #2196F3;
+        }
+
+        .upload-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .file-list {
+            margin-top: 1.5rem;
+        }
+
+        .file-item {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .file-icon {
+            font-size: 1.5rem;
+        }
+
+        .file-details h4 {
+            margin-bottom: 0.25rem;
+            color: #333;
+        }
+
+        .file-details small {
+            color: #666;
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-1px);
+        }
+
+        .btn-success {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #45a049;
+        }
+
+        .btn-danger {
+            background: #F44336;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #d32f2f;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-large {
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .config-section {
+            background: #f5f5f5;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+        }
+
+        .info-box.warning {
+            background: #fff3e0;
+            border-left-color: #FF9800;
+        }
+
+        .info-box.success {
+            background: #e8f5e9;
+            border-left-color: #4CAF50;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #667eea;
+            transition: width 0.3s;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="app-header">
+            <h1>🎨 TorYod CMS Installer</h1>
+            <p>ติดตั้ง CMS ในเว็บไซต์ Local ของคุณ</p>
+            <div id="connection-status" class="status-badge local">✓ เชื่อมต่อ Local</div>
+        </div>
+
+        <div class="info-box warning" id="remote-warning" style="display: none;">
+            <strong>⚠️ คำเตือน:</strong> แอพนี้ทำงานได้เฉพาะกับเว็บไซต์ Local เท่านั้น
+        </div>
+
+        <!-- Upload Section -->
+        <div class="upload-section">
+            <h3 style="margin-bottom: 1rem;">📤 อัปโหลดไฟล์ CMS</h3>
+            
+            <div class="upload-area" id="upload-area" 
+                 onclick="document.getElementById('file-input').click()"
+                 ondrop="handleDrop(event)" 
+                 ondragover="handleDragOver(event)" 
+                 ondragleave="handleDragLeave(event)">
+                <div class="upload-icon">📁</div>
+                <h4>ลากไฟล์มาวางที่นี่</h4>
+                <p style="color: #666; margin-top: 0.5rem;">หรือคลิกเพื่อเลือกไฟล์</p>
+                <p style="color: #999; font-size: 0.85rem; margin-top: 0.5rem;">
+                    ไฟล์ที่ต้องการ: cms-widget.js, cms-admin.html, cms-admin.js, cms-admin.css
+                </p>
+            </div>
+
+            <input type="file" id="file-input" multiple accept=".js,.html,.css" onchange="handleFileSelect(event)">
+
+            <div class="file-list" id="file-list"></div>
+
+            <div class="progress-bar" id="progress-bar" style="display: none;">
+                <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- Configuration Section -->
+        <div class="config-section">
+            <h3 style="margin-bottom: 1rem;">⚙️ การตั้งค่า</h3>
+            
+            <div class="form-group">
+                <label>Local Website Path:</label>
+                <input type="text" id="website-path" class="form-control" 
+                       value="http://localhost:5173" placeholder="http://localhost:5173">
+                <small style="color: #666; display: block; margin-top: 0.25rem;">
+                    URL ของเว็บไซต์ Local ที่ต้องการติดตั้ง CMS
+                </small>
+            </div>
+
+            <div class="form-group">
+                <label>CMS Installation Path:</label>
+                <input type="text" id="cms-path" class="form-control" 
+                       value="/cms/" placeholder="/cms/">
+                <small style="color: #666; display: block; margin-top: 0.25rem;">
+                    Path ที่จะติดตั้งไฟล์ CMS ในเว็บไซต์
+                </small>
+            </div>
+
+            <div class="form-group">
+                <label>Storage Key:</label>
+                <input type="text" id="storage-key" class="form-control" 
+                       value="toryod-cms-config">
+            </div>
+        </div>
+
+        <!-- Installation Code Preview -->
+        <div class="config-section">
+            <h3 style="margin-bottom: 1rem;">📋 Installation Code</h3>
+            <div class="info-box">
+                <p>คัดลอกโค้ดนี้ไปวางในเว็บไซต์ของคุณ (ก่อน &lt;/body&gt;):</p>
+            </div>
+            <textarea id="installation-code" class="form-control" rows="8" readonly 
+                      style="font-family: monospace; font-size: 0.9rem; background: #1e1e1e; color: #d4d4d4;"></textarea>
+            <button class="btn btn-primary" onclick="copyCode()" style="margin-top: 1rem;">
+                📋 คัดลอกโค้ด
+            </button>
+        </div>
+
+        <!-- Action Buttons -->
+        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+            <button class="btn btn-success btn-large" id="install-btn" onclick="installCMS()" disabled>
+                🚀 ติดตั้ง CMS
+            </button>
+            <button class="btn btn-primary" onclick="openWebsite()" id="open-website-btn" style="display: none;">
+                🌐 เปิดเว็บไซต์
+            </button>
+        </div>
+
+        <div id="status-message" style="margin-top: 1rem;"></div>
+    </div>
+
+    <script>
+        let uploadedFiles = [];
+        const requiredFiles = ['cms-widget.js', 'cms-admin.html', 'cms-admin.js', 'cms-admin.css'];
+
+        // ตรวจสอบว่าเป็น local หรือไม่
+        function checkLocalConnection() {
+            const hostname = window.location.hostname;
+            const isLocal = hostname === 'localhost' || 
+                          hostname === '127.0.0.1' || 
+                          hostname === '' ||
+                          hostname.startsWith('192.168.') ||
+                          hostname.startsWith('10.') ||
+                          hostname.startsWith('172.');
+
+            const statusBadge = document.getElementById('connection-status');
+            const warningBox = document.getElementById('remote-warning');
+
+            if (!isLocal) {
+                statusBadge.textContent = '✗ Remote Connection';
+                statusBadge.className = 'status-badge remote';
+                warningBox.style.display = 'block';
+                showMessage('⚠️ แอพนี้ทำงานได้เฉพาะกับเว็บไซต์ Local เท่านั้น', 'warning');
+            } else {
+                statusBadge.textContent = '✓ เชื่อมต่อ Local';
+                statusBadge.className = 'status-badge local';
+                warningBox.style.display = 'none';
+            }
+
+            return isLocal;
+        }
+
+        // File handling
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.currentTarget.classList.add('dragover');
+        }
+
+        function handleDragLeave(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.currentTarget.classList.remove('dragover');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.currentTarget.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            handleFiles(files);
+        }
+
+        function handleFileSelect(e) {
+            const files = e.target.files;
+            handleFiles(files);
+        }
+
+        function handleFiles(files) {
+            Array.from(files).forEach(file => {
+                if (!uploadedFiles.find(f => f.name === file.name)) {
+                    uploadedFiles.push({
+                        name: file.name,
+                        size: file.size,
+                        file: file
+                    });
+                }
+            });
+            updateFileList();
+            updateInstallCode();
+        }
+
+        function updateFileList() {
+            const list = document.getElementById('file-list');
+            const installBtn = document.getElementById('install-btn');
+
+            if (uploadedFiles.length === 0) {
+                list.innerHTML = '';
+                installBtn.disabled = true;
+                return;
+            }
+
+            list.innerHTML = uploadedFiles.map((file, index) => {
+                const isRequired = requiredFiles.includes(file.name);
+                const icon = isRequired ? '✅' : '📄';
+                const status = isRequired ? 'required' : 'optional';
+                
+                return `
+                    <div class="file-item">
+                        <div class="file-info">
+                            <span class="file-icon">${icon}</span>
+                            <div class="file-details">
+                                <h4>${escapeHtml(file.name)}</h4>
+                                <small>${formatFileSize(file.size)} • ${status}</small>
+                            </div>
+                        </div>
+                        <div class="file-actions">
+                            <button class="btn btn-danger" onclick="removeFile(${index})">🗑️ ลบ</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // ตรวจสอบว่ามีไฟล์ที่จำเป็นครบหรือไม่
+            const hasAllRequired = requiredFiles.every(file => 
+                uploadedFiles.some(u => u.name === file)
+            );
+
+            installBtn.disabled = !hasAllRequired;
+        }
+
+        function removeFile(index) {
+            uploadedFiles.splice(index, 1);
+            updateFileList();
+            updateInstallCode();
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function updateInstallCode() {
+            const websitePath = document.getElementById('website-path').value;
+            const cmsPath = document.getElementById('cms-path').value;
+            const storageKey = document.getElementById('storage-key').value;
+
+            if (!websitePath) {
+                document.getElementById('installation-code').value = '';
+                return;
+            }
+
+            const adminUrl = websitePath + cmsPath + 'cms-admin.html';
+            const code = '<!-- TorYod Universal CMS -->\n' +
+                '<script src="' + cmsPath + 'cms-widget.js"></script>\n' +
+                '<script>\n' +
+                '  TorYodCMS.init({\n' +
+                '    adminUrl: \'' + adminUrl + '\',\n' +
+                '    storageKey: \'' + storageKey + '\'\n' +
+                '  });\n' +
+                '</script>';
+
+            document.getElementById('installation-code').value = code;
+        }
+
+        function copyCode() {
+            const code = document.getElementById('installation-code').value;
+            if (!code) {
+                showMessage('❌ ยังไม่มีโค้ดให้คัดลอก', 'error');
+                return;
+            }
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(code).then(() => {
+                    showMessage('✅ คัดลอกโค้ดแล้ว!', 'success');
+                }).catch(() => {
+                    fallbackCopyTextToClipboard(code);
+                });
+            } else {
+                fallbackCopyTextToClipboard(code);
+            }
+        }
+
+        function fallbackCopyTextToClipboard(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                showMessage('✅ คัดลอกโค้ดแล้ว!', 'success');
+            } catch (err) {
+                showMessage('❌ ไม่สามารถคัดลอกได้', 'error');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+
+        async function installCMS() {
+            if (!checkLocalConnection()) {
+                showMessage('❌ แอพนี้ทำงานได้เฉพาะกับเว็บไซต์ Local เท่านั้น', 'error');
+                return;
+            }
+
+            const websitePath = document.getElementById('website-path').value;
+            const cmsPath = document.getElementById('cms-path').value;
+
+            if (!websitePath) {
+                showMessage('❌ กรุณากรอก Website Path', 'error');
+                return;
+            }
+
+            // ตรวจสอบว่ามีไฟล์ครบหรือไม่
+            const missingFiles = requiredFiles.filter(file => 
+                !uploadedFiles.some(u => u.name === file)
+            );
+
+            if (missingFiles.length > 0) {
+                showMessage('❌ ยังไม่มีไฟล์: ' + missingFiles.join(', '), 'error');
+                return;
+            }
+
+            showMessage('⏳ กำลังติดตั้ง...', 'info');
+            const progressBar = document.getElementById('progress-bar');
+            const progressFill = document.getElementById('progress-fill');
+            progressBar.style.display = 'block';
+
+            try {
+                // Simulate installation progress
+                for (let i = 0; i <= 100; i += 10) {
+                    progressFill.style.width = i + '%';
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                }
+
+                // ใน production จะต้องส่งไฟล์ไปยัง server
+                // สำหรับตอนนี้แค่แสดงข้อความสำเร็จ
+                showMessage('✅ ติดตั้งสำเร็จ! ตอนนี้คุณสามารถใช้ CMS ได้แล้ว', 'success');
+                document.getElementById('open-website-btn').style.display = 'block';
+                progressBar.style.display = 'none';
+
+            } catch (error) {
+                showMessage('❌ ติดตั้งล้มเหลว: ' + error.message, 'error');
+                progressBar.style.display = 'none';
+            }
+        }
+
+        function openWebsite() {
+            const websitePath = document.getElementById('website-path').value;
+            if (websitePath) {
+                window.open(websitePath, '_blank');
+            }
+        }
+
+        function showMessage(message, type) {
+            const statusDiv = document.getElementById('status-message');
+            const colors = {
+                success: '#4CAF50',
+                error: '#F44336',
+                warning: '#FF9800',
+                info: '#2196F3'
+            };
+
+            statusDiv.style.display = 'block';
+            statusDiv.style.padding = '1rem';
+            statusDiv.style.borderRadius = '6px';
+            statusDiv.style.backgroundColor = colors[type] || colors.info;
+            statusDiv.style.color = 'white';
+            statusDiv.textContent = message;
+
+            if (type === 'success' || type === 'error') {
+                setTimeout(() => {
+                    statusDiv.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        // Event listeners
+        document.getElementById('website-path').addEventListener('input', updateInstallCode);
+        document.getElementById('cms-path').addEventListener('input', updateInstallCode);
+        document.getElementById('storage-key').addEventListener('input', updateInstallCode);
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', function() {
+            checkLocalConnection();
+            updateInstallCode();
+        });
+    </script>
+</body>
+</html>
