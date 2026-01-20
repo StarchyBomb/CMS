@@ -421,8 +421,10 @@
 
         function generatePluginCode(data) {
             // Generate CMS widget code with extracted data
-            const websiteUrl = new URL(websiteUrl).origin;
-            const adminUrl = websiteUrl + '/cms-admin.html';
+            try {
+                const url = new URL(websiteUrl);
+                const baseUrl = url.origin;
+                const adminUrl = baseUrl + '/cms-admin.html';
             
             let code = '<!-- TorYod CMS Plugin -->\n';
             code += '<!-- ดึงข้อมูลจาก: ' + websiteUrl + ' -->\n';
@@ -436,6 +438,19 @@
             code += '</script>\n';
             code += '<!-- หมายเหตุ: ต้องอัปโหลดไฟล์ cms-widget.js และ cms-admin.html ไปยังเว็บไซต์ด้วย -->';
             return code;
+            } catch (e) {
+                // Fallback if URL parsing fails
+                const adminUrl = websiteUrl + '/cms-admin.html';
+                let code = '<!-- TorYod CMS Plugin -->\n';
+                code += '<script src="/cms-widget.js"></script>\n';
+                code += '<script>\n';
+                code += '  TorYodCMS.init({\n';
+                code += '    adminUrl: \'' + adminUrl + '\',\n';
+                code += '    storageKey: \'toryod-cms-config\'\n';
+                code += '  });\n';
+                code += '</script>';
+                return code;
+            }
         }
 
         function showMessage(message, type) {
