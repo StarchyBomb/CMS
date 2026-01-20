@@ -139,6 +139,26 @@ TorYodCMS.importConfig(jsonString);
 TorYodCMS.reset();
 ```
 
+## 🔄 การอัพเดท
+
+### อัพเดทผ่าน Update Script:
+```bash
+# Linux/Mac
+bash update.sh
+
+# Windows
+.\update.ps1
+```
+
+### อัพเดทผ่าน Git:
+```bash
+git pull origin main
+```
+
+**ดูรายละเอียดที่ [UPDATE.md](./UPDATE.md)**
+
+---
+
 ## 📁 โครงสร้างไฟล์
 
 ```
