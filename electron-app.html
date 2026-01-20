@@ -217,10 +217,10 @@
             <div class="url-input-section">
                 <input type="url" id="website-url" class="url-input" 
                        placeholder="https://example.com หรือ http://localhost:3000" value="">
-                <button class="btn btn-primary" id="scrape-btn" onclick="scrapeWebsite()">
+                <button class="btn btn-primary" id="scrape-btn">
                     🔍 ดึงข้อมูล
                 </button>
-                <button class="btn btn-primary" id="install-btn" onclick="installPlugin()" disabled>
+                <button class="btn btn-primary" id="install-btn" disabled>
                     ⚡ ติดตั้ง Plugin
                 </button>
             </div>
@@ -475,6 +475,22 @@
             div.textContent = text;
             return div.innerHTML;
         }
+
+        // Setup event listeners when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            // Scrape button
+            document.getElementById('scrape-btn').addEventListener('click', scrapeWebsite);
+            
+            // Install button
+            document.getElementById('install-btn').addEventListener('click', installPlugin);
+            
+            // Enter key on URL input
+            document.getElementById('website-url').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    scrapeWebsite();
+                }
+            });
+        });
     </script>
 </body>
 </html>
