@@ -2,6 +2,28 @@
 
 ## ติดตั้งใน 3 ขั้นตอนง่ายๆ
 
+### 🔥 วิธีที่ 0: ติดตั้งผ่าน Git (เร็วที่สุด!)
+
+#### Linux/Mac:
+```bash
+bash <(curl -s https://raw.githubusercontent.com/StarchyBomb/CMS/main/install.sh)
+```
+
+#### Windows (PowerShell):
+```powershell
+iwr -useb https://raw.githubusercontent.com/StarchyBomb/CMS/main/install.ps1 | iex
+```
+
+#### หรือ Clone โดยตรง:
+```bash
+git clone https://github.com/StarchyBomb/CMS.git
+cd CMS
+```
+
+**ดูรายละเอียดที่ [GIT_INSTALL.md](./GIT_INSTALL.md)**
+
+---
+
 ### ⚡ วิธีที่ 1: ใช้ Setup Wizard (แนะนำ - กดไม่กี่ปุ่ม!)
 
 1. **เปิดไฟล์ `setup.html`**

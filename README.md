@@ -14,6 +14,33 @@
 
 ## 🚀 Quick Start
 
+### 🔥 วิธีติดตั้งผ่าน Git (แนะนำ!)
+
+#### สำหรับ Linux/Mac:
+```bash
+bash <(curl -s https://raw.githubusercontent.com/StarchyBomb/CMS/main/install.sh)
+```
+
+#### สำหรับ Windows (PowerShell):
+```powershell
+iwr -useb https://raw.githubusercontent.com/StarchyBomb/CMS/main/install.ps1 | iex
+```
+
+#### หรือ Clone โดยตรง:
+```bash
+git clone https://github.com/StarchyBomb/CMS.git
+cd CMS
+```
+
+#### สำหรับ Node.js:
+```bash
+npm install toryod-universal-cms
+# หรือ
+npx toryod-universal-cms
+```
+
+---
+
 ### ⚡ วิธีติดตั้งแบบง่ายที่สุด (กดไม่กี่ปุ่ม!)
 
 1. **เปิดไฟล์ `setup.html`** - Setup Wizard จะช่วยคุณติดตั้ง

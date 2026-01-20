@@ -1,0 +1,34 @@
+{
+  "name": "toryod-universal-cms",
+  "version": "1.0.0",
+  "description": "Universal CMS that can be installed on any website - Edit CSS/HTML without coding",
+  "main": "cms-widget.js",
+  "scripts": {
+    "install": "node install-node.js",
+    "setup": "node install-node.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/StarchyBomb/CMS.git"
+  },
+  "keywords": [
+    "cms",
+    "content-management",
+    "website-editor",
+    "css-editor",
+    "html-editor",
+    "no-code"
+  ],
+  "author": "TorYod Development Team",
+  "license": "MIT",
+  "files": [
+    "cms-widget.js",
+    "cms-admin.html",
+    "cms-admin.js",
+    "cms-admin.css",
+    "install.js",
+    "setup.html",
+    "README.md",
+    "INSTALLATION.md"
+  ]
+}
