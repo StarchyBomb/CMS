@@ -1,34 +1,57 @@
 {
-  "name": "toryod-universal-cms",
+  "name": "toryod-cms-app",
   "version": "1.0.0",
-  "description": "Universal CMS that can be installed on any website - Edit CSS/HTML without coding",
-  "main": "cms-widget.js",
+  "description": "TorYod CMS - Standalone Desktop Application",
+  "main": "electron-main.js",
   "scripts": {
-    "install": "node install-node.js",
-    "setup": "node install-node.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/StarchyBomb/CMS.git"
+    "start": "electron .",
+    "build": "electron-builder",
+    "build:win": "electron-builder --win --x64",
+    "build:mac": "electron-builder --mac",
+    "build:linux": "electron-builder --linux"
   },
   "keywords": [
     "cms",
-    "content-management",
-    "website-editor",
-    "css-editor",
-    "html-editor",
-    "no-code"
+    "desktop-app",
+    "electron",
+    "content-management"
   ],
   "author": "TorYod Development Team",
   "license": "MIT",
-  "files": [
-    "cms-widget.js",
-    "cms-admin.html",
-    "cms-admin.js",
-    "cms-admin.css",
-    "install.js",
-    "setup.html",
-    "README.md",
-    "INSTALLATION.md"
-  ]
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.12"
+  },
+  "devDependencies": {
+    "electron": "^27.0.0",
+    "electron-builder": "^24.6.4"
+  },
+  "build": {
+    "appId": "com.toryod.cms",
+    "productName": "TorYod CMS",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "electron-app.html",
+      "electron-main.js",
+      "electron-preload.js",
+      "cms-admin.html",
+      "cms-admin.js",
+      "cms-admin.css",
+      "cms-widget.js",
+      "node_modules/**/*"
+    ],
+    "win": {
+      "target": ["nsis"],
+      "icon": "icon.ico"
+    },
+    "mac": {
+      "target": ["dmg"],
+      "icon": "icon.icns"
+    },
+    "linux": {
+      "target": ["AppImage"],
+      "icon": "icon.png"
+    }
+  }
 }

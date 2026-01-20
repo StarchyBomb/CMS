@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TorYod Universal CMS - Admin Panel</title>
+    <link rel="stylesheet" href="cms-admin.css">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Header -->
+        <header class="admin-header">
+            <div class="header-content">
+                <h1>🎨 TorYod Universal CMS</h1>
+                <p>แก้ไขเว็บไซต์โดยไม่ต้องแก้โค้ด</p>
+            </div>
+            <div class="header-actions">
+                <button id="preview-btn" class="btn btn-secondary">👁️ Preview</button>
+                <button id="save-btn" class="btn btn-primary">💾 บันทึก</button>
+                <button id="export-btn" class="btn btn-outline">📥 Export</button>
+                <button id="import-btn" class="btn btn-outline">📤 Import</button>
+                <button id="reset-btn" class="btn btn-danger">🔄 Reset</button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="admin-main">
+            <!-- Sidebar -->
+            <aside class="admin-sidebar">
+                <nav class="sidebar-nav">
+                    <a href="#visual-editor" class="nav-item active" data-section="visual-editor">
+                        <span class="nav-icon">🎯</span>
+                        <span class="nav-text">Visual Editor</span>
+                    </a>
+                    <a href="#css-editor" class="nav-item" data-section="css-editor">
+                        <span class="nav-icon">🎨</span>
+                        <span class="nav-text">CSS Editor</span>
+                    </a>
+                    <a href="#content-editor" class="nav-item" data-section="content-editor">
+                        <span class="nav-icon">📝</span>
+                        <span class="nav-text">Content Editor</span>
+                    </a>
+                    <a href="#style-manager" class="nav-item" data-section="style-manager">
+                        <span class="nav-icon">💅</span>
+                        <span class="nav-text">Style Manager</span>
+                    </a>
+                    <a href="#settings" class="nav-item" data-section="settings">
+                        <span class="nav-icon">⚙️</span>
+                        <span class="nav-text">Settings</span>
+                    </a>
+                </nav>
+            </aside>
+
+            <!-- Content Area -->
+            <main class="admin-content">
+                <!-- Visual Editor Section -->
+                <section id="visual-editor" class="content-section active">
+                    <div class="section-header">
+                        <h2>🎯 Visual Editor</h2>
+                        <p>คลิกเลือก element บนเว็บไซต์เพื่อแก้ไข</p>
+                    </div>
+
+                    <div class="editor-controls">
+                        <div class="control-group">
+                            <label>
+                                <input type="checkbox" id="element-picker-mode" checked>
+                                เปิดโหมดเลือก Element
+                            </label>
+                        </div>
+                        <div class="control-group">
+                            <button id="open-site-btn" class="btn btn-primary">
+                                🌐 เปิดเว็บไซต์ในหน้าต่างใหม่
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="element-selector-panel">
+                        <h3>Element ที่เลือก:</h3>
+                        <div id="selected-element-info" class="element-info">
+                            <p class="placeholder">ยังไม่ได้เลือก element</p>
+                        </div>
+
+                        <div id="element-editor" class="element-editor" style="display: none;">
+                            <h4>แก้ไข Element</h4>
+                            
+                            <div class="form-group">
+                                <label>Selector (CSS):</label>
+                                <input type="text" id="element-selector" class="form-control" readonly>
+                            </div>
+
+                            <div class="form-group">
+                                <label>แก้ไขข้อความ:</label>
+                                <textarea id="element-text" class="form-control" rows="3"></textarea>
+                                <button id="update-text-btn" class="btn btn-sm btn-primary">อัปเดต</button>
+                            </div>
+
+                            <div class="form-group">
+                                <label>แก้ไข HTML:</label>
+                                <textarea id="element-html" class="form-control" rows="5"></textarea>
+                                <button id="update-html-btn" class="btn btn-sm btn-primary">อัปเดต</button>
+                            </div>
+
+                            <div class="form-group">
+                                <label>แก้ไข Attributes:</label>
+                                <div id="attributes-list"></div>
+                                <button id="add-attribute-btn" class="btn btn-sm btn-outline">+ เพิ่ม Attribute</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- CSS Editor Section -->
+                <section id="css-editor" class="content-section">
+                    <div class="section-header">
+                        <h2>🎨 CSS Editor</h2>
+                        <p>เขียน CSS แบบกำหนดเองหรือแก้ไข styles ของ elements</p>
+                    </div>
+
+                    <div class="editor-tabs">
+                        <button class="tab-btn active" data-tab="custom-css">Custom CSS</button>
+                        <button class="tab-btn" data-tab="style-overrides">Style Overrides</button>
+                    </div>
+
+                    <div id="custom-css-tab" class="tab-content active">
+                        <div class="form-group">
+                            <label>Custom CSS Code:</label>
+                            <textarea id="custom-css-editor" class="code-editor" rows="20" 
+                                      placeholder="/* เขียน CSS ของคุณที่นี่ */
+.example {
+    color: red;
+    font-size: 18px;
+}"></textarea>
+                            <div class="editor-actions">
+                                <button id="apply-css-btn" class="btn btn-primary">✅ ใช้ CSS</button>
+                                <button id="clear-css-btn" class="btn btn-secondary">🗑️ ล้าง</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="style-overrides-tab" class="tab-content">
+                        <div class="style-overrides-list" id="style-overrides-list">
+                            <p class="placeholder">ยังไม่มี style overrides</p>
+                        </div>
+                        <div class="form-group">
+                            <button id="add-style-override-btn" class="btn btn-primary">+ เพิ่ม Style Override</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Content Editor Section -->
+                <section id="content-editor" class="content-section">
+                    <div class="section-header">
+                        <h2>📝 Content Editor</h2>
+                        <p>จัดการการเปลี่ยนแปลงเนื้อหาทั้งหมด</p>
+                    </div>
+
+                    <div class="content-list" id="content-list">
+                        <p class="placeholder">ยังไม่มีการแก้ไขเนื้อหา</p>
+                    </div>
+
+                    <div class="form-group">
+                        <button id="add-content-rule-btn" class="btn btn-primary">+ เพิ่ม Content Rule</button>
+                    </div>
+                </section>
+
+                <!-- Style Manager Section -->
+                <section id="style-manager" class="content-section">
+                    <div class="section-header">
+                        <h2>💅 Style Manager</h2>
+                        <p>จัดการ styles ของ elements แบบละเอียด</p>
+                    </div>
+
+                    <div class="style-manager-list" id="style-manager-list">
+                        <p class="placeholder">ยังไม่มีการจัดการ styles</p>
+                    </div>
+
+                    <div class="form-group">
+                        <button id="add-style-rule-btn" class="btn btn-primary">+ เพิ่ม Style Rule</button>
+                    </div>
+                </section>
+
+                <!-- Settings Section -->
+                <section id="settings" class="content-section">
+                    <div class="section-header">
+                        <h2>⚙️ Settings</h2>
+                        <p>การตั้งค่าระบบ</p>
+                    </div>
+
+                    <div class="settings-form">
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="cms-enabled" checked>
+                                เปิดใช้งาน CMS
+                            </label>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Storage Key:</label>
+                            <input type="text" id="storage-key" class="form-control" 
+                                   value="toryod-cms-config" readonly>
+                            <small>Key สำหรับเก็บข้อมูลใน localStorage</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Website URL:</label>
+                            <input type="url" id="website-url" class="form-control" 
+                                   placeholder="https://example.com">
+                            <small>URL ของเว็บไซต์ที่ต้องการแก้ไข</small>
+                        </div>
+
+                        <div class="form-group">
+                            <h3>Installation Code</h3>
+                            <textarea id="installation-code" class="form-control code-editor" rows="8" readonly></textarea>
+                            <button id="copy-install-code-btn" class="btn btn-primary">📋 Copy Installation Code</button>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="modal-overlay" class="modal-overlay" style="display: none;">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modal-title">Modal Title</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- Modal content -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Messages -->
+    <div id="status-message" class="status-message"></div>
+
+    <!-- File Input (hidden) -->
+    <input type="file" id="import-file-input" accept=".json" style="display: none;">
+
+    <script src="cms-admin.js"></script>
+</body>
+</html>

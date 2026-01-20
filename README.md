@@ -1,290 +1,104 @@
-# 🎨 TorYod Universal CMS
+# 🎨 TorYod CMS Desktop App
 
-ระบบจัดการเนื้อหาสากลที่ติดตั้งได้ในเว็บไซต์ใดก็ได้ - แก้ไข CSS และ HTML โดยไม่ต้องแก้โค้ด!
+แอพ Desktop สำหรับดึงข้อมูลจากเว็บไซต์และติดตั้ง CMS Plugin อัตโนมัติ
 
-## ✨ คุณสมบัติหลัก
+## ✨ คุณสมบัติ
 
-- 🎯 **แก้ไข CSS แบบ Real-time** - เปลี่ยน styles ของ elements ใดก็ได้
-- 📝 **แก้ไข Content** - เปลี่ยนข้อความและ HTML โดยไม่ต้องแก้โค้ด
-- 🎨 **Custom CSS Editor** - เขียน CSS แบบกำหนดเอง
-- 🔧 **Style Manager** - จัดการ styles แบบละเอียด
-- 📥 **Export/Import** - ส่งออกและนำเข้าการตั้งค่า
-- 🚀 **ติดตั้งง่าย** - เพียงแค่เพิ่ม script tag เดียว
-- 💾 **LocalStorage** - เก็บข้อมูลใน browser (หรือเชื่อมต่อ backend ได้)
+- ✅ **ดึงข้อมูลอัตโนมัติ** - ดึง HTML, CSS, ข้อความ, สี, รูปภาพจากเว็บไซต์
+- ✅ **ติดตั้ง Plugin** - ติดตั้ง CMS plugin ในเว็บไซต์อัตโนมัติ
+- ✅ **Desktop App** - ทำงานเป็น .exe (Windows)
+- ✅ **บันทึกข้อมูล** - บันทึกข้อมูลที่ดึงได้เป็น JSON
 
-## 🚀 Quick Start
+## 🚀 วิธี Build .exe
 
-### 🔥 วิธีติดตั้งผ่าน Git (แนะนำ!)
+### Windows (ง่ายที่สุด!)
 
-#### สำหรับ Linux/Mac:
 ```bash
-bash <(curl -s https://raw.githubusercontent.com/StarchyBomb/CMS/main/install.sh)
+# ดับเบิลคลิกไฟล์
+build.bat
+
+# หรือรันจาก Command Prompt
+build.bat
 ```
 
-#### สำหรับ Windows (PowerShell):
-```powershell
-iwr -useb https://raw.githubusercontent.com/StarchyBomb/CMS/main/install.ps1 | iex
-```
+### Manual Build
 
-#### หรือ Clone โดยตรง:
 ```bash
-git clone https://github.com/StarchyBomb/CMS.git
-cd CMS
+# 1. ติดตั้ง dependencies
+npm install
+
+# 2. Build .exe
+npm run build:win
+
+# 3. ไฟล์ .exe จะอยู่ในโฟลเดอร์ dist/
 ```
 
-#### สำหรับ Node.js:
+## 📦 Dependencies
+
+- Node.js (https://nodejs.org)
+- npm (มาพร้อมกับ Node.js)
+
+## 🎯 วิธีใช้งาน
+
+### 1. Build .exe
+
 ```bash
-npm install toryod-universal-cms
-# หรือ
-npx toryod-universal-cms
+build.bat
 ```
 
----
+### 2. เปิดแอพ
 
-### ⚡ วิธีติดตั้งแบบง่ายที่สุด (กดไม่กี่ปุ่ม!)
+- ไปที่โฟลเดอร์ `dist/`
+- ดับเบิลคลิกไฟล์ `.exe`
 
-1. **เปิดไฟล์ `setup.html`** - Setup Wizard จะช่วยคุณติดตั้ง
-2. **กรอกข้อมูล** - 3 ขั้นตอนง่ายๆ
-3. **คัดลอกโค้ด** - วางในเว็บไซต์
-4. **เสร็จ!** 🎉
+### 3. ใช้งาน
 
-ดูรายละเอียดที่ [AUTO_INSTALL.md](./AUTO_INSTALL.md)
-
----
-
-### วิธีติดตั้งแบบ Manual
-
-### 1. ดาวน์โหลดไฟล์
-
-```
-cms-widget.js      # Widget script สำหรับ inject เข้าเว็บไซต์
-cms-admin.html     # Admin Panel
-cms-admin.js       # Admin Panel Logic
-cms-admin.css      # Admin Panel Styles
-```
-
-### 2. ติดตั้งในเว็บไซต์
-
-เพิ่มโค้ดนี้ก่อน `</body>`:
-
-```html
-<script src="cms-widget.js"></script>
-<script>
-  TorYodCMS.init({
-    adminUrl: 'https://your-domain.com/cms-admin.html',
-    storageKey: 'toryod-cms-config'
-  });
-</script>
-```
-
-### 3. เปิด Admin Panel
-
-ไปที่ `cms-admin.html` หรือคลิกปุ่ม "CMS Admin" ที่มุมล่างขวาของเว็บไซต์
-
-## 📖 เอกสาร
-
-- [📦 คู่มือการติดตั้ง](./INSTALLATION.md) - วิธีติดตั้งและใช้งาน
-- [🔧 API Reference](./CMS_API_REFERENCE.md) - เอกสาร API
-- [🏗️ Architecture](./CMS_ARCHITECTURE.md) - สถาปัตยกรรมระบบ
-- [📚 Documentation](./CMS_DOCUMENTATION.md) - เอกสารฉบับเต็ม
-
-## 🎯 ตัวอย่างการใช้งาน
-
-### แก้ไข CSS
-
-```javascript
-// ใน Admin Panel → CSS Editor → Style Overrides
-Selector: .header
-Property: background-color
-Value: #FF8C5A
-```
-
-### แก้ไข Content
-
-```javascript
-// ใน Admin Panel → Content Editor
-Selector: h1.title
-Type: Text
-Content: ข้อความใหม่
-```
-
-### Custom CSS
-
-```css
-/* ใน Admin Panel → CSS Editor → Custom CSS */
-.header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-```
-
-## 🔧 API Methods
-
-```javascript
-// ตั้งค่า Style
-TorYodCMS.setStyle('.header', 'background-color', 'red');
-
-// ตั้งค่า Content
-TorYodCMS.setContent('.title', 'New Title', 'text');
-
-// ตั้งค่า Custom CSS
-TorYodCMS.setCustomCSS('body { background: red; }');
-
-// Export Config
-const config = TorYodCMS.exportConfig();
-
-// Import Config
-TorYodCMS.importConfig(jsonString);
-
-// Reset
-TorYodCMS.reset();
-```
-
-## 🔄 การอัพเดท
-
-### อัพเดทผ่าน Update Script:
-```bash
-# Linux/Mac
-bash update.sh
-
-# Windows
-.\update.ps1
-```
-
-### อัพเดทผ่าน Git:
-```bash
-git pull origin main
-```
-
-**ดูรายละเอียดที่ [UPDATE.md](./UPDATE.md)**
-
----
-
-## 🎨 Standalone App
-
-### แอพ CMS แยกต่างหาก
-
-แอพ CMS ที่ทำงานได้เองโดยไม่ต้องพึ่งเว็บไซต์:
-
-#### วิธีรันแอพ (ง่ายที่สุด!)
-
-**Windows:**
-```bash
-run-app.bat
-```
-
-**Linux/Mac:**
-```bash
-chmod +x run-app.sh
-./run-app.sh
-```
-
-**หรือใช้ http-server:**
-```bash
-http-server -p 8080 -o cms-app.html
-```
-
-**ดูรายละเอียดที่ [HOW_TO_RUN.md](./HOW_TO_RUN.md)**
-
-#### PWA (Progressive Web App)
-- ✅ ติดตั้งเป็น Desktop App ได้
-- ✅ ทำงาน Offline ได้
-- ✅ เปิดไฟล์ `cms-app.html` ใน browser
-
-#### Desktop App (Electron)
-- ✅ ติดตั้งเป็น Desktop Application
-- ✅ รองรับ Windows, Mac, Linux
-- ✅ ใช้คำสั่ง `npm start`
-
-**ดูรายละเอียดที่ [APP_STANDALONE.md](./APP_STANDALONE.md)**
-
----
-
-## 📦 Installer App
-
-### แอพติดตั้งสำหรับ Local
-
-เปิดไฟล์ `app.html` เพื่อใช้แอพติดตั้ง CMS ที่:
-- ✅ อัปโหลดไฟล์ CMS ได้
-- ✅ ติดตั้งอัตโนมัติ
-- ✅ ทำงานได้เฉพาะ Local เท่านั้น
-
-**ดูรายละเอียดที่ [APP_README.md](./APP_README.md)**
-
----
+1. **กรอก URL** ของเว็บไซต์ที่ต้องการดึงข้อมูล
+2. **คลิก "ดึงข้อมูล"** - แอพจะดึง HTML, CSS, ข้อความ, สี, รูปภาพ
+3. **คลิก "ติดตั้ง Plugin"** - แอพจะติดตั้ง CMS plugin ในเว็บไซต์
 
 ## 📁 โครงสร้างไฟล์
 
 ```
 CMS/
-├── cms-widget.js          # Widget script (สำหรับ inject)
-├── cms-admin.html         # Admin Panel UI
-├── cms-admin.js          # Admin Panel Logic
-├── cms-admin.css         # Admin Panel Styles
-├── example.html          # ตัวอย่างเว็บไซต์
-├── INSTALLATION.md       # คู่มือการติดตั้ง
-├── README.md             # เอกสารนี้
-├── CMS_API_REFERENCE.md  # API Reference
-├── CMS_ARCHITECTURE.md   # Architecture
-└── CMS_DOCUMENTATION.md  # Documentation
+├── electron-main.js      # Electron main process
+├── electron-app.html     # App UI
+├── electron-preload.js   # Preload script
+├── cms-admin.html       # Admin panel
+├── cms-admin.js         # Admin logic
+├── cms-admin.css        # Admin styles
+├── cms-widget.js        # CMS widget
+├── package.json         # Package config
+├── build.bat            # Build script
+└── BUILD_EXE.md         # Build documentation
 ```
 
-## 🎨 หน้าจอ Admin Panel
+## 🔧 Development
 
-- **Visual Editor** - เลือกและแก้ไข elements แบบ visual
-- **CSS Editor** - แก้ไข CSS และ Custom CSS
-- **Content Editor** - จัดการการเปลี่ยนแปลงเนื้อหา
-- **Style Manager** - จัดการ styles แบบละเอียด
-- **Settings** - การตั้งค่าระบบ
-
-## 🔒 Security
-
-- ⚠️ **ปัจจุบัน**: ข้อมูลเก็บใน LocalStorage (client-side only)
-- ✅ **แนะนำ**: เพิ่ม backend API สำหรับ production
-- ✅ **แนะนำ**: เพิ่ม authentication system
-
-## 🛠️ Development
-
-### Local Development
-
-1. เปิด `example.html` ใน browser
-2. เปิด `cms-admin.html` ใน browser อีก tab
-3. เริ่มแก้ไข!
-
-### Testing
+### รันแอพในโหมด Development
 
 ```bash
-# ใช้ local server (แนะนำ)
-python -m http.server 8000
-# หรือ
-npx serve
+npm start
 ```
 
-## 📝 Roadmap
+### Build สำหรับ Production
 
-- [ ] Visual Element Picker (คลิกเลือก element บนเว็บ)
-- [ ] Real-time Preview
-- [ ] Backend API Integration
-- [ ] User Authentication
-- [ ] Multi-language Support
-- [ ] Version Control
-- [ ] Cloud Storage Integration
+```bash
+npm run build:win
+```
 
-## 🤝 Contributing
+## 📚 เอกสาร
 
-ยินดีรับ contributions! กรุณา:
+- [BUILD_EXE.md](./BUILD_EXE.md) - คู่มือการ Build .exe
+- [CMS_DOCUMENTATION.md](./CMS_DOCUMENTATION.md) - เอกสาร CMS
+- [CMS_API_REFERENCE.md](./CMS_API_REFERENCE.md) - API Reference
+- [CMS_ARCHITECTURE.md](./CMS_ARCHITECTURE.md) - สถาปัตยกรรม
 
-1. Fork repository
-2. สร้าง feature branch
-3. Commit changes
-4. Push และสร้าง Pull Request
+## ⚠️ หมายเหตุ
 
-## 📄 License
-
-MIT License - ใช้ได้ฟรีทั้ง commercial และ personal projects
-
-## 🙏 Credits
-
-พัฒนาโดย TorYod Development Team
+- แอพนี้ใช้ Electron สำหรับสร้าง Desktop Application
+- ต้องมี Node.js ติดตั้งก่อน build
+- ไฟล์ .exe จะอยู่ในโฟลเดอร์ `dist/` หลัง build
 
 ---
 
