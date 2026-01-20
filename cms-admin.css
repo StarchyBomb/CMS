@@ -1,0 +1,574 @@
+/* TorYod Universal CMS - Admin Panel Styles */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #FF8C5A;
+    --secondary-color: #FFD4B3;
+    --dark-color: #FF8C5A;
+    --text-dark: #1A1A1A;
+    --bg-light: #F5F5F5;
+    --bg-white: #FFFFFF;
+    --border-color: #E0E0E0;
+    --success-color: #4CAF50;
+    --danger-color: #F44336;
+    --warning-color: #FF9800;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: var(--bg-light);
+    color: var(--text-dark);
+    line-height: 1.6;
+}
+
+/* Admin Container */
+.admin-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Header */
+.admin-header {
+    background: var(--bg-white);
+    border-bottom: 2px solid var(--border-color);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.header-content h1 {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin-bottom: 0.25rem;
+}
+
+.header-content p {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.header-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* Buttons */
+.btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--dark-color);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+}
+
+.btn-outline:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+.btn-danger {
+    background: var(--danger-color);
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #d32f2f;
+}
+
+.btn-sm {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.85rem;
+}
+
+/* Main Layout */
+.admin-main {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* Sidebar */
+.admin-sidebar {
+    width: 250px;
+    background: var(--bg-white);
+    border-right: 1px solid var(--border-color);
+    overflow-y: auto;
+}
+
+.sidebar-nav {
+    padding: 1rem 0;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1.5rem;
+    color: var(--text-dark);
+    text-decoration: none;
+    transition: all 0.2s;
+    border-left: 3px solid transparent;
+}
+
+.nav-item:hover {
+    background: var(--bg-light);
+    border-left-color: var(--primary-color);
+}
+
+.nav-item.active {
+    background: var(--secondary-color);
+    border-left-color: var(--primary-color);
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.nav-icon {
+    font-size: 1.2rem;
+}
+
+/* Content Area */
+.admin-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 2rem;
+}
+
+.content-section {
+    display: none;
+}
+
+.content-section.active {
+    display: block;
+}
+
+.section-header {
+    margin-bottom: 2rem;
+}
+
+.section-header h2 {
+    font-size: 1.75rem;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+}
+
+.section-header p {
+    color: #666;
+}
+
+/* Forms */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--text-dark);
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    transition: border-color 0.2s;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(255, 140, 90, 0.1);
+}
+
+.form-control[readonly] {
+    background: var(--bg-light);
+    cursor: not-allowed;
+}
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.code-editor {
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    background: #1e1e1e;
+    color: #d4d4d4;
+    border: 1px solid #3e3e3e;
+}
+
+.code-editor:focus {
+    border-color: var(--primary-color);
+}
+
+/* Editor Controls */
+.editor-controls {
+    background: var(--bg-white);
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.control-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+/* Element Selector Panel */
+.element-selector-panel {
+    background: var(--bg-white);
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.element-info {
+    background: var(--bg-light);
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+}
+
+.element-info .placeholder {
+    color: #999;
+    font-style: italic;
+}
+
+.element-editor {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+}
+
+/* Tabs */
+.editor-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.tab-btn {
+    padding: 0.75rem 1.5rem;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: #666;
+    transition: all 0.2s;
+}
+
+.tab-btn:hover {
+    color: var(--primary-color);
+}
+
+.tab-btn.active {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+    font-weight: 600;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Lists */
+.style-overrides-list,
+.content-list,
+.style-manager-list {
+    background: var(--bg-white);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    min-height: 200px;
+}
+
+.placeholder {
+    color: #999;
+    text-align: center;
+    padding: 2rem;
+    font-style: italic;
+}
+
+/* Style Rule Item */
+.style-rule-item,
+.content-rule-item {
+    background: var(--bg-light);
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 0.75rem;
+    border-left: 3px solid var(--primary-color);
+}
+
+.rule-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.rule-selector {
+    font-family: monospace;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.rule-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.rule-properties {
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.property-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    background: white;
+    border-radius: 4px;
+    margin-bottom: 0.25rem;
+}
+
+.property-name {
+    font-family: monospace;
+    font-weight: 600;
+    color: #666;
+}
+
+.property-value {
+    font-family: monospace;
+    color: var(--text-dark);
+}
+
+/* Settings */
+.settings-form {
+    background: var(--bg-white);
+    padding: 1.5rem;
+    border-radius: 8px;
+}
+
+.settings-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.settings-form small {
+    display: block;
+    margin-top: 0.25rem;
+    color: #666;
+    font-size: 0.85rem;
+}
+
+/* Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+}
+
+.modal {
+    background: var(--bg-white);
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-header h3 {
+    margin: 0;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #666;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-close:hover {
+    color: var(--danger-color);
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+/* Status Message */
+.status-message {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 1rem 1.5rem;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 10001;
+    display: none;
+    animation: slideIn 0.3s ease;
+}
+
+.status-message.show {
+    display: block;
+}
+
+.status-message.success {
+    background: var(--success-color);
+    color: white;
+}
+
+.status-message.error {
+    background: var(--danger-color);
+    color: white;
+}
+
+.status-message.info {
+    background: #2196F3;
+    color: white;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .admin-main {
+        flex-direction: column;
+    }
+
+    .admin-sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .sidebar-nav {
+        display: flex;
+        overflow-x: auto;
+    }
+
+    .nav-item {
+        white-space: nowrap;
+    }
+
+    .admin-content {
+        padding: 1rem;
+    }
+
+    .header-actions {
+        flex-wrap: wrap;
+    }
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-light);
+}
+
+::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #999;
+}
