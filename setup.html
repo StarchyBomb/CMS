@@ -338,7 +338,7 @@
                 <label>URL ของเว็บไซต์ที่ต้องการติดตั้ง:</label>
                 <input type="url" id="website-url" class="form-control" 
                        placeholder="https://example.com">
-                <button class="auto-detect-btn" onclick="autoDetectUrl()">
+                <button class="auto-detect-btn" id="auto-detect-btn">
                     🔍 ตรวจจับอัตโนมัติ
                 </button>
             </div>
@@ -362,8 +362,8 @@
             </div>
 
             <div class="button-group">
-                <button class="btn btn-secondary" onclick="goToStep(0)" disabled>ย้อนกลับ</button>
-                <button class="btn btn-primary" onclick="generateCode()">ต่อไป →</button>
+                <button class="btn btn-secondary" id="step1-back-btn" disabled>ย้อนกลับ</button>
+                <button class="btn btn-primary" id="step1-next-btn">ต่อไป →</button>
             </div>
         </div>
 
@@ -379,7 +379,7 @@
             <div class="form-group">
                 <label>โค้ดติดตั้ง:</label>
                 <div class="code-box">
-                    <button class="copy-btn" onclick="copyCode()">📋 คัดลอก</button>
+                    <button class="copy-btn" id="copy-code-btn">📋 คัดลอก</button>
                     <code id="installation-code"></code>
                 </div>
             </div>
@@ -389,8 +389,8 @@
             </div>
 
             <div class="button-group">
-                <button class="btn btn-secondary" onclick="goToStep(1)">← ย้อนกลับ</button>
-                <button class="btn btn-primary" onclick="goToStep(3)">ต่อไป →</button>
+                <button class="btn btn-secondary" id="step2-back-btn">← ย้อนกลับ</button>
+                <button class="btn btn-primary" id="step2-next-btn">ต่อไป →</button>
             </div>
         </div>
 
@@ -425,8 +425,8 @@
             <div class="file-list" id="file-list"></div>
 
             <div class="button-group">
-                <button class="btn btn-secondary" onclick="goToStep(2)">← ย้อนกลับ</button>
-                <button class="btn btn-success btn-large" onclick="completeSetup()">
+                <button class="btn btn-secondary" id="step3-back-btn">← ย้อนกลับ</button>
+                <button class="btn btn-success btn-large" id="step3-complete-btn">
                     ✅ เสร็จสิ้น - ไปที่ Admin Panel
                 </button>
             </div>
@@ -450,7 +450,7 @@
             </div>
 
             <div class="button-group" style="margin-top: 2rem;">
-                <button class="btn btn-primary btn-large" onclick="openAdminPanel()">
+                <button class="btn btn-primary btn-large" id="open-admin-btn">
                     🚀 เปิด Admin Panel
                 </button>
             </div>
@@ -514,14 +514,14 @@
             const adminUrl = websiteUrl + cmsPath + 'cms-admin.html';
 
             // Generate installation code
-            const code = `<!-- TorYod Universal CMS -->
-<script src="${cmsPath}cms-widget.js"></script>
-<script>
-  TorYodCMS.init({
-    adminUrl: '${adminUrl}',
-    storageKey: '${storageKey}'
-  });
-</script>`;
+            const code = '<!-- TorYod Universal CMS -->\n' +
+                '<script src="' + cmsPath + 'cms-widget.js"></script>\n' +
+                '<script>\n' +
+                '  TorYodCMS.init({\n' +
+                '    adminUrl: \'' + adminUrl + '\',\n' +
+                '    storageKey: \'' + storageKey + '\'\n' +
+                '  });\n' +
+                '</script>';
 
             document.getElementById('installation-code').textContent = code;
             goToStep(2);
@@ -529,15 +529,49 @@
 
         function copyCode() {
             const code = document.getElementById('installation-code').textContent;
-            navigator.clipboard.writeText(code).then(() => {
-                const btn = event.target;
+            const btn = event.target;
+            
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(code).then(() => {
+                    btn.textContent = '✅ คัดลอกแล้ว!';
+                    btn.classList.add('copied');
+                    setTimeout(() => {
+                        btn.textContent = '📋 คัดลอก';
+                        btn.classList.remove('copied');
+                    }, 2000);
+                }).catch(() => {
+                    // Fallback for older browsers
+                    fallbackCopyTextToClipboard(code, btn);
+                });
+            } else {
+                // Fallback for older browsers
+                fallbackCopyTextToClipboard(code, btn);
+            }
+        }
+
+        function fallbackCopyTextToClipboard(text, btn) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            textArea.style.top = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
                 btn.textContent = '✅ คัดลอกแล้ว!';
                 btn.classList.add('copied');
                 setTimeout(() => {
                     btn.textContent = '📋 คัดลอก';
                     btn.classList.remove('copied');
                 }, 2000);
-            });
+            } catch (err) {
+                alert('❌ ไม่สามารถคัดลอกได้ กรุณาคัดลอกด้วยตนเอง');
+            }
+            
+            document.body.removeChild(textArea);
         }
 
         function handleDragOver(e) {
@@ -628,9 +662,29 @@
             alert(message);
         }
 
-        // Auto-detect on load
+        // Setup event listeners
         window.addEventListener('DOMContentLoaded', function() {
+            // Auto-detect URL on load
             autoDetectUrl();
+            
+            // Step 1 buttons
+            document.getElementById('auto-detect-btn').addEventListener('click', autoDetectUrl);
+            document.getElementById('step1-next-btn').addEventListener('click', generateCode);
+            
+            // Step 2 buttons
+            document.getElementById('copy-code-btn').addEventListener('click', copyCode);
+            document.getElementById('step2-back-btn').addEventListener('click', () => goToStep(1));
+            document.getElementById('step2-next-btn').addEventListener('click', () => goToStep(3));
+            
+            // Step 3 buttons
+            document.getElementById('step3-back-btn').addEventListener('click', () => goToStep(2));
+            document.getElementById('step3-complete-btn').addEventListener('click', completeSetup);
+            
+            // Success step button
+            document.getElementById('open-admin-btn').addEventListener('click', openAdminPanel);
+            
+            // File input
+            document.getElementById('file-input').addEventListener('change', handleFileSelect);
         });
     </script>
 </body>
