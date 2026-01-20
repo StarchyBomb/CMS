@@ -165,6 +165,26 @@ git pull origin main
 
 แอพ CMS ที่ทำงานได้เองโดยไม่ต้องพึ่งเว็บไซต์:
 
+#### วิธีรันแอพ (ง่ายที่สุด!)
+
+**Windows:**
+```bash
+run-app.bat
+```
+
+**Linux/Mac:**
+```bash
+chmod +x run-app.sh
+./run-app.sh
+```
+
+**หรือใช้ http-server:**
+```bash
+http-server -p 8080 -o cms-app.html
+```
+
+**ดูรายละเอียดที่ [HOW_TO_RUN.md](./HOW_TO_RUN.md)**
+
 #### PWA (Progressive Web App)
 - ✅ ติดตั้งเป็น Desktop App ได้
 - ✅ ทำงาน Offline ได้
